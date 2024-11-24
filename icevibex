@@ -1,0 +1,228 @@
+import React, { useState, useEffect } from 'react';
+import { ChevronRight, Star, Clock, Instagram, Facebook, WhatsApp, Mail } from 'lucide-react';
+
+const IceVibexLanding = () => {
+  const [timeLeft, setTimeLeft] = useState(9000); // 2:30:00 em segundos
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  // Contador regressivo
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Header scroll behavior
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      setIsHeaderVisible(currentScrollY <= lastScrollY);
+      setLastScrollY(currentScrollY);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY]);
+
+  // Formatar tempo
+  const formatTime = (seconds) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const flavors = [
+    { name: 'Morango', color: 'bg-red-500', description: 'Vibrante e refrescante' },
+    { name: 'Limão', color: 'bg-green-500', description: 'Cítrico e revigorante' },
+    { name: 'Menta', color: 'bg-blue-500', description: 'Suave e refrescante' },
+    { name: 'Frutas Tropicais', color: 'bg-yellow-500', description: 'Mix exótico' }
+  ];
+
+  const testimonials = [
+    { name: 'Maria A.', text: 'Transformou minhas bebidas!', rating: 5 },
+    { name: 'João P.', text: 'Incrível para eventos e encontros.', rating: 5 }
+  ];
+
+  return (
+    <div className="min-h-screen bg-white">
+      {/* Header */}
+      <header className={`fixed w-full bg-white shadow-md transition-transform duration-300 z-50 ${
+        isHeaderVisible ? 'translate-y-0' : '-translate-y-full'
+      }`}>
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="text-2xl font-bold text-blue-600">IceVibeX</div>
+          <nav className="hidden md:flex space-x-6">
+            <a href="#flavors" className="text-gray-600 hover:text-blue-600">Sabores</a>
+            <a href="#how-it-works" className="text-gray-600 hover:text-blue-600">Como Funciona</a>
+            <a href="#testimonials" className="text-gray-600 hover:text-blue-600">Depoimentos</a>
+          </nav>
+          <button className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition">
+            Compre Agora
+          </button>
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <section className="pt-24 pb-16 px-4">
+        <div className="container mx-auto text-center">
+          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+            Sabor e Frescor em Cada Cubo
+          </h1>
+          <p className="text-xl text-gray-600 mb-8">
+            Gelos saborizados para refrescar e surpreender
+          </p>
+          <button className="bg-blue-600 text-white text-lg px-8 py-4 rounded-full hover:bg-blue-700 transition">
+            Peça Já o Seu!
+          </button>
+        </div>
+      </section>
+
+      {/* Flavors Section */}
+      <section id="flavors" className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-12">Sabores Exclusivos</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {flavors.map((flavor) => (
+              <div key={flavor.name} className="bg-white rounded-lg shadow-lg overflow-hidden">
+                <div className={`h-48 ${flavor.color}`}></div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold mb-2">{flavor.name}</h3>
+                  <p className="text-gray-600 mb-4">{flavor.description}</p>
+                  <button className="w-full bg-blue-600 text-white py-2 rounded-full hover:bg-blue-700 transition">
+                    Experimente {flavor.name}!
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How it Works */}
+      <section id="how-it-works" className="py-16">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-12">Como Funciona?</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {['Escolha o Sabor', 'Receba em Casa', 'Adicione ao Seu Momento Especial'].map((step, index) => (
+              <div key={step} className="text-center">
+                <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-4">
+                  {index + 1}
+                </div>
+                <h3 className="text-xl font-bold mb-2">{step}</h3>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section id="testimonials" className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-12">Depoimentos</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {testimonials.map((testimonial) => (
+              <div key={testimonial.name} className="bg-white p-6 rounded-lg shadow">
+                <div className="flex justify-center mb-4">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+                <p className="text-gray-600 mb-4">"{testimonial.text}"</p>
+                <p className="font-bold">- {testimonial.name}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Promotion */}
+      <section className="bg-blue-600 text-white py-8">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-2xl font-bold mb-4">Somente hoje: 20% de desconto na primeira compra!</h2>
+          <div className="flex items-center justify-center space-x-2 mb-6">
+            <Clock className="w-6 h-6" />
+            <span className="text-xl font-mono">{formatTime(timeLeft)}</span>
+          </div>
+          <button className="bg-white text-blue-600 px-8 py-3 rounded-full hover:bg-gray-100 transition">
+            Garanta Agora!
+          </button>
+        </div>
+      </section>
+
+      {/* Pricing */}
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-12">Planos e Preços</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              { name: 'Pacote Individual', price: 29.90 },
+              { name: 'Combo (3 sabores)', price: 79.90 },
+              { name: 'Kit Premium', price: 139.90 }
+            ].map((plan) => (
+              <div key={plan.name} className="bg-white p-6 rounded-lg shadow-lg">
+                <h3 className="text-xl font-bold mb-4">{plan.name}</h3>
+                <p className="text-3xl font-bold mb-6">R$ {plan.price.toFixed(2)}</p>
+                <button className="w-full bg-blue-600 text-white py-3 rounded-full hover:bg-blue-700 transition">
+                  Comprar Agora
+                </button>
+              </div>
+            ))}
+          </div>
+          <p className="text-center mt-8 text-gray-600">Frete grátis acima de R$100</p>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-12">Perguntas Frequentes</h2>
+          <div className="max-w-2xl mx-auto space-y-6">
+            {[
+              { q: 'Como armazenar os gelos?', a: 'Mantenha no freezer em temperatura constante.' },
+              { q: 'Os sabores são naturais?', a: 'Sim, usamos apenas ingredientes naturais.' },
+              { q: 'Qual o prazo de entrega?', a: '2-3 dias úteis para capitais.' }
+            ].map((faq) => (
+              <div key={faq.q} className="bg-white p-6 rounded-lg">
+                <h3 className="font-bold mb-2">{faq.q}</h3>
+                <p className="text-gray-600">{faq.a}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-12">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+              <h3 className="text-xl font-bold mb-4">IceVibeX</h3>
+              <p className="text-gray-400">Sabor e Frescor em Cada Cubo</p>
+            </div>
+            <div>
+              <h3 className="text-xl font-bold mb-4">Links Úteis</h3>
+              <ul className="space-y-2">
+                <li><a href="#" className="text-gray-400 hover:text-white">Política de Trocas</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white">Termos e Condições</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white">Fale Conosco</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-xl font-bold mb-4">Redes Sociais</h3>
+              <div className="flex space-x-4">
+                <Instagram className="w-6 h-6 text-gray-400 hover:text-white cursor-pointer" />
+                <Facebook className="w-6 h-6 text-gray-400 hover:text-white cursor-pointer" />
+                <WhatsApp className="w-6 h-6 text-gray-400 hover:text-white cursor-pointer" />
+                <Mail className="w-6 h-6 text-gray-400 hover:text-white cursor-pointer" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default IceVibexLanding;
